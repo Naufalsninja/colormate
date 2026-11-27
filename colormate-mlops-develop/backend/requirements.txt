@@ -1,0 +1,11 @@
+fastapi==0.162.7
+uvicorn==0.54.0
+pydantic==2.14.3
+pydantic-settings==2.16.3
+python-multipart==0.0.33
+Pillow==13.0.0
+
+# Temporary CPU inference dependencies
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.11.0+cpu
+torchvision==0.26.0+cpu

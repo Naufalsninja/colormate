@@ -1,0 +1,123 @@
+@layer base {
+  html,
+  body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    overscroll-behavior: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  main > :first-child {
+    margin-top: 0 !important;
+  }
+
+  main > :last-child {
+    margin-bottom: 0 !important;
+  }
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Scan Viewport & Reticle */
+.scan-viewport {
+  min-height: 100dvh;
+  height: 100dvh;
+}
+
+.camera-mirror {
+  transform: scaleX(-1);
+}
+
+.reticle-corner-tl {
+  box-shadow: inset 2.5px 2.5px 0 0 #e08b9b;
+}
+
+.reticle-corner-tr {
+  box-shadow: inset -2.5px 2.5px 0 0 #e08b9b;
+}
+
+.reticle-corner-bl {
+  box-shadow: inset 2.5px -2.5px 0 0 #e08b9b;
+}
+
+.reticle-corner-br {
+  box-shadow: inset -2.5px -2.5px 0 0 #e08b9b;
+}
+
+.reticle-oval {
+  box-shadow:
+    inset 0 0 24px rgba(224, 139, 155, 0.25),
+    0 0 16px rgba(224, 139, 155, 0.35);
+  outline: 2px dashed rgba(224, 139, 155, 0.65);
+  outline-offset: -2px;
+  transition: outline-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.reticle-oval.is-locked {
+  outline-color: #10b981;
+  box-shadow:
+    inset 0 0 28px rgba(16, 185, 129, 0.25),
+    0 0 20px rgba(16, 185, 129, 0.4);
+}
+
+.laser-beam {
+  box-shadow:
+    0 0 16px 4px rgba(224, 139, 155, 0.8),
+    0 0 32px 8px rgba(254, 214, 91, 0.4);
+  animation: biometricScan 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+}
+
+.badge-pulse {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+.shimmer-bar {
+  animation: shimmerMove 2.2s infinite linear;
+}
+
+.analysis-card-shadow {
+  box-shadow:
+    0 16px 40px rgba(144, 72, 87, 0.12),
+    0 4px 16px rgba(37, 24, 28, 0.06);
+}
+
+@keyframes biometricScan {
+  0% { top: 12%; opacity: 0.2; }
+  20% { opacity: 0.95; }
+  80% { opacity: 0.95; }
+  100% { top: 86%; opacity: 0.2; }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.12); opacity: 1; }
+}
+
+@keyframes shimmerMove {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
+}
+
+/* Toast Notification */
+.toast-enter {
+  animation: toastSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes toastSlideUp {
+  from { opacity: 0; transform: translate(-50%, 14px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}

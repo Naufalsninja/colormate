@@ -1,0 +1,14 @@
+﻿.git
+.venv
+**/__pycache__
+**/*.pyc
+frontend/
+reports/
+scripts/
+data/
+models/checkpoints/
+*.pt
+*.pth
+*.onnx
+.env
+.env.*

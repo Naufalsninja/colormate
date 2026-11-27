@@ -1,0 +1,51 @@
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Model artifacts
+*.pt
+*.pth
+*.onnx
+
+# Dataset
+data/raw/
+data/processed/
+data/external/
+
+# DVC cache
+.dvc/cache/
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Dataset audit generated reports
+reports/dataset_audit/*.png
+
+# Generated dataset audit artifacts
+reports/dataset_audit/
+
+# Face audit virtual environment
+.venv-face-audit/
