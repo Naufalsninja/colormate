@@ -20,8 +20,10 @@ di `models/checkpoints/colormate_resnet18_experiment01.pt` atau lokasinya
 ditentukan lewat `COLORMATE_CHECKPOINT_PATH`.
 
 Frontend mengirim foto ke `POST /api/v1/analyze/upload`. Default CORS backend
-mengizinkan frontend lokal pada port 5500 dan 3000. Untuk deployment, isi
-`CORS_ORIGINS` dengan origin frontend yang tepat, dipisahkan koma.
+mengizinkan frontend lokal pada port 5500 dan 3000 serta
+`https://colormate-colormate-frontend-main.vercel.app`. Jika domain frontend
+berbeda atau `CORS_ORIGINS` diatur, isi variabel tersebut dengan origin yang
+tepat, dipisahkan koma.
 
 ## Struktur
 
