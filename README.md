@@ -18,7 +18,9 @@ python -m pip install -r backend\requirements.txt
 python -m uvicorn backend.app.main:app --reload --port 8000
 ```
 
-The frontend currently targets `http://localhost:8000`. Model inference also
-requires the checkpoint at
+The frontend targets `https://colormate.onrender.com` by default. For local
+backend testing, change `API_BASE_URL` in
+`colormate-frontend-main/js/config.js` to `http://localhost:8000`. Model
+inference also requires the checkpoint at
 `colormate-mlops-develop/models/checkpoints/colormate_resnet18_experiment01.pt`
 or a path configured with `COLORMATE_CHECKPOINT_PATH`.

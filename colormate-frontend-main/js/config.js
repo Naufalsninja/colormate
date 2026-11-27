@@ -1,11 +1,11 @@
 export const APP_CONFIG = {
-  API_BASE_URL: "http://localhost:8000",
+  API_BASE_URL: "https://colormate.onrender.com",
   ENDPOINTS: {
     ANALYZE_FACE: "/api/v1/analyze/upload"
   },
   CONSENT_VERSION: "2026-11-27",
   USE_MOCK_AI: false,
-  REQUEST_TIMEOUT_MS: 20000,
+  REQUEST_TIMEOUT_MS: 120000,
   SCAN_PREP_DURATION_MS: 3200
 };
 

@@ -22,8 +22,10 @@ Frontend statis ColorMate Atelier yang terhubung ke FastAPI pada direktori
    `/api/v1/analyze/upload`.
 
 `js/config.js` berisi URL backend (`API_BASE_URL`), endpoint, dan versi teks
-persetujuan. Untuk origin frontend selain port 5500, sesuaikan `CORS_ORIGINS`
-di environment backend.
+persetujuan. URL default backend adalah `https://colormate.onrender.com`;
+ubah ke `http://localhost:8000` saat memakai backend lokal. Render Free dapat
+menidurkan service saat tidak aktif, sehingga permintaan pertama mungkin perlu
+waktu lebih lama untuk tersambung.
 
 API saat ini hanya menyediakan prediksi musim dan confidence. Palet warna,
 undertone, dan rekomendasi produk akan ditampilkan sebagai belum tersedia
