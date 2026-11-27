@@ -19,9 +19,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   const consentCheckbox = document.getElementById("processingConsent");
   const consentContinueBtn = document.getElementById("btnAcceptConsent");
   const consentCancelBtn = document.getElementById("btnCancelConsent");
+  const photoFileInput = document.getElementById("photoUploadInput");
+  const photoUploadStatus = document.getElementById("photoUploadStatus");
+  const uploadPhotoBtn = document.getElementById("btnUploadPhoto");
 
   const camera = new CameraController(videoEl, fallbackEl);
   let isCancelled = false;
+  let selectedPhoto = null;
+  let retryAction = null;
+  const allowedImageTypes = ["image/jpeg", "image/png", "image/webp"];
+  const maxUploadBytes = 5 * 1024 * 1024;
 
   const cancelScan = () => {
     isCancelled = true;
@@ -33,13 +40,28 @@ document.addEventListener("DOMContentLoaded", async () => {
   consentCancelBtn?.addEventListener("click", cancelScan);
 
   consentCheckbox?.addEventListener("change", () => {
-    if (consentContinueBtn) consentContinueBtn.disabled = !consentCheckbox.checked;
+    updateConsentButtons();
+  });
+
+  photoFileInput?.addEventListener("change", () => {
+    selectedPhoto = photoFileInput.files?.[0] || null;
+    const validationError = selectedPhoto ? validatePhoto(selectedPhoto) : null;
+
+    if (photoUploadStatus) {
+      photoUploadStatus.textContent = validationError
+        || selectedPhoto?.name
+        || "Belum ada foto dipilih.";
+      photoUploadStatus.classList.toggle("text-error", Boolean(validationError));
+    }
+
+    updateConsentButtons();
   });
 
   consentContinueBtn?.addEventListener("click", async () => {
     if (!consentCheckbox?.checked) return;
 
     consentDialog?.classList.add("hidden");
+    retryAction = runBiometricScanSequence;
     const hasCamera = await camera.start();
     if (cameraModeBadge) {
       cameraModeBadge.textContent = hasCamera ? "LIVE SENSOR • 60 FPS" : "KAMERA TIDAK TERSEDIA";
@@ -47,12 +69,29 @@ document.addEventListener("DOMContentLoaded", async () => {
     runBiometricScanSequence();
   });
 
+  uploadPhotoBtn?.addEventListener("click", () => {
+    if (!consentCheckbox?.checked || !selectedPhoto) return;
+
+    const validationError = validatePhoto(selectedPhoto);
+    if (validationError) {
+      if (photoUploadStatus) photoUploadStatus.textContent = validationError;
+      return;
+    }
+
+    isCancelled = false;
+    consentDialog?.classList.add("hidden");
+    camera.stop();
+    if (cameraModeBadge) cameraModeBadge.textContent = "UPLOAD FOTO";
+    retryAction = () => analyzeUploadedPhoto(selectedPhoto);
+    analyzeUploadedPhoto(selectedPhoto);
+  });
+
   if (retryBtn) {
     retryBtn.addEventListener("click", () => {
       retryBtn.classList.add("hidden");
       reticleOval?.classList.remove("is-locked");
       isCancelled = false;
-      runBiometricScanSequence();
+      (retryAction || runBiometricScanSequence)();
     });
   }
 
@@ -81,31 +120,65 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
       const frame = await camera.captureFrame();
-      const diagnostics = {
-        lightingScore: 98,
-        distanceCm: 45,
-        warmthBias: frame.warmthBias
-      };
+      await submitPhoto(frame.blob, { warmthBias: frame.warmthBias }, frame.dataUrl);
+    } catch (error) {
+      showAnalysisError(error);
+    }
+  }
 
-      const analysisResult = await analyzeFaceWithAI(frame.blob, diagnostics);
+  async function analyzeUploadedPhoto(file) {
+    updateProgressUI(45, "Mengunggah foto...", `Mengirim ${file.name} untuk dianalisis.`);
+    await submitPhoto(file);
+  }
+
+  async function submitPhoto(imageBlob, diagnostics = {}, capturedPhotoDataUrl = null) {
+    try {
+      const analysisResult = await analyzeFaceWithAI(imageBlob, diagnostics);
       if (isCancelled) return;
 
       updateProgressUI(100, "Analisis Selesai!", "Membuka hasil personal color Anda...");
-      storageService.saveAnalysisResult(analysisResult, frame.dataUrl);
+      storageService.saveAnalysisResult(analysisResult, capturedPhotoDataUrl);
 
       camera.stop();
       setTimeout(() => {
         window.location.href = "hasil.html";
       }, 350);
     } catch (error) {
-      console.error("[ScanPage] Error analisis AI:", error);
-      showToast(error.message || "Gagal terhubung ke server AI.", "error");
-      if (statusTitle) statusTitle.textContent = "Koneksi Server AI Terkendala";
-      if (statusSubtitle) {
-        statusSubtitle.textContent = "Periksa URL backend di js/config.js atau tekan tombol Coba Lagi.";
-      }
-      retryBtn?.classList.remove("hidden");
+      showAnalysisError(error);
     }
+  }
+
+  function showAnalysisError(error) {
+    if (isCancelled) return;
+
+    console.error("[ScanPage] Error analisis AI:", error);
+    showToast(error.message || "Gagal terhubung ke server AI.", "error");
+    if (statusTitle) statusTitle.textContent = "Koneksi Server AI Terkendala";
+    if (statusSubtitle) {
+      statusSubtitle.textContent = "Periksa URL backend di js/config.js atau tekan tombol Coba Lagi.";
+    }
+    retryBtn?.classList.remove("hidden");
+  }
+
+  function updateConsentButtons() {
+    const hasConsent = Boolean(consentCheckbox?.checked);
+    if (consentContinueBtn) consentContinueBtn.disabled = !hasConsent;
+    if (uploadPhotoBtn) {
+      uploadPhotoBtn.disabled = !hasConsent || !selectedPhoto || Boolean(validatePhoto(selectedPhoto));
+    }
+  }
+
+  function validatePhoto(file) {
+    if (!allowedImageTypes.includes(file.type)) {
+      return "Pilih foto berformat JPEG, PNG, atau WebP.";
+    }
+    if (file.size === 0) {
+      return "File foto kosong. Pilih foto lain.";
+    }
+    if (file.size > maxUploadBytes) {
+      return "Ukuran foto maksimal 5 MB.";
+    }
+    return "";
   }
 
   function updateProgressUI(percent, title, subtitle) {

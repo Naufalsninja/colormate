@@ -123,7 +123,7 @@ export async function analyzeFaceWithAI(imageBlob, diagnostics = {}) {
 
   try {
     const formData = new FormData();
-    formData.append("file", imageBlob, "face_capture.jpg");
+    formData.append("file", imageBlob, imageBlob.name || "face_capture.jpg");
     formData.append("processing_consent", "true");
     formData.append("storage_consent", "false");
     formData.append("consent_version", APP_CONFIG.CONSENT_VERSION);

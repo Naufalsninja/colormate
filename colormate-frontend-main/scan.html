@@ -183,33 +183,53 @@
     aria-labelledby="scanConsentTitle"
     aria-describedby="scanConsentDescription"
   >
-    <section class="w-full max-w-md rounded-2xl bg-surface-container-lowest p-6 text-on-surface shadow-2xl">
+    <section class="max-h-[calc(100vh-3rem)] w-full max-w-md overflow-y-auto rounded-2xl bg-surface-container-lowest p-6 text-on-surface shadow-2xl">
       <h1 id="scanConsentTitle" class="font-headline-md text-headline-md mb-3">
         Persetujuan pemrosesan foto
       </h1>
-      <p id="scanConsentDescription" class="font-body-md text-body-md text-on-surface-variant mb-5">
+      <p id="scanConsentDescription" class="font-body-md text-body-md text-on-surface-variant mb-4">
         Foto akan dikirim ke backend ColorMate untuk analisis AI dan diproses sementara di memori.
         Foto tidak disimpan oleh layanan ini. Anda dapat membatalkan kapan saja.
       </p>
-      <label class="flex items-start gap-3 font-body-md text-body-md mb-6">
+      <label class="flex items-start gap-3 font-body-md text-body-md mb-4">
         <input id="processingConsent" type="checkbox" class="mt-1 h-5 w-5 accent-primary" />
         <span>Saya menyetujui pemrosesan foto untuk analisis ini.</span>
       </label>
-      <div class="flex gap-3">
+      <label for="photoUploadInput" class="block font-label-md text-label-md text-on-surface mb-2">
+        Atau pilih foto dari perangkat (JPEG, PNG, WebP; maksimal 5 MB)
+      </label>
+      <input
+        id="photoUploadInput"
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        class="mb-1 block w-full text-sm text-on-surface file:mr-3 file:rounded-full file:border-0 file:bg-surface-container-high file:px-4 file:py-2 file:font-medium file:text-on-surface"
+      />
+      <p id="photoUploadStatus" class="mb-4 min-h-5 text-sm text-on-surface-variant" aria-live="polite">
+        Belum ada foto dipilih.
+      </p>
+      <div class="flex flex-col gap-3">
         <button
-          id="btnCancelConsent"
+          id="btnUploadPhoto"
           type="button"
-          class="flex-1 rounded-full bg-surface-container-high px-4 py-3 font-title-md text-title-md text-on-surface"
+          disabled
+          class="w-full rounded-full bg-secondary px-4 py-3 font-title-md text-title-md text-on-secondary disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Batal
+          Upload &amp; Analisis
         </button>
         <button
           id="btnAcceptConsent"
           type="button"
           disabled
-          class="flex-1 rounded-full bg-primary px-4 py-3 font-title-md text-title-md text-on-primary disabled:cursor-not-allowed disabled:opacity-50"
+          class="w-full rounded-full bg-primary px-4 py-3 font-title-md text-title-md text-on-primary disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Setuju &amp; Mulai
+          Setuju &amp; Gunakan Kamera
+        </button>
+        <button
+          id="btnCancelConsent"
+          type="button"
+          class="w-full rounded-full bg-surface-container-high px-4 py-3 font-title-md text-title-md text-on-surface"
+        >
+          Batal
         </button>
       </div>
     </section>

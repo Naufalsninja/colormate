@@ -9,7 +9,7 @@ Frontend statis di `colormate-frontend-main` menggunakan backend FastAPI di
 - **Path:** `/api/v1/analyze/upload`
 - **Content-Type:** `multipart/form-data`
 - **Request fields:**
-  - `file`: foto JPEG hasil kamera (maksimal 5 MB).
+  - `file`: foto JPEG, PNG, atau WebP dari kamera maupun upload (maksimal 5 MB).
   - `processing_consent`: `true`, dikirim setelah pengguna menyetujui pemrosesan.
   - `storage_consent`: `false`; backend saat ini tidak menyimpan foto.
   - `consent_version`: versi teks persetujuan yang ditampilkan frontend.
